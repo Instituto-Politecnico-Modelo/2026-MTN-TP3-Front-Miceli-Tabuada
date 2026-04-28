@@ -1,0 +1,25 @@
+.about {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.about__title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 1.5rem;
+}
+
+.about__list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.about__authors {
+  margin-top: 1rem;
+  color: #555;
+}
