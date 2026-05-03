@@ -1,20 +1,24 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
 interface ProtectedRouteProps {
-  /** Condición que determina si el usuario tiene acceso */
+  // Si es falso el usuario no puede entrar, lo mandamos a la ruta de redireccion.
   isAllowed: boolean;
-  /** Ruta a la que redirigir si no tiene acceso (por defecto: /login) */
+  // A donde mandarlo si no tiene acceso. Por defecto va al login.
   redirectTo?: string;
+  // Si se especifican roles, el usuario tambien tiene que tener uno de ellos para entrar.
+  allowedRoles?: string[];
+  // El rol que tiene el usuario logueado actualmente.
+  userRole?: string;
 }
 
-/**
- * Envuelve rutas que requieren autenticación.
- * Si `isAllowed` es false, redirige a `redirectTo`.
- * Usar con <Outlet /> para rutas anidadas.
- */
-const ProtectedRoute = ({ isAllowed, redirectTo = '/login' }: ProtectedRouteProps) => {
+// Actua como portero antes de mostrar una ruta privada.
+// Primero verifica que el usuario este logueado; si ademas se piden roles, verifica que tenga el permiso correcto.
+const ProtectedRoute = ({ isAllowed, redirectTo = '/login', allowedRoles, userRole }: ProtectedRouteProps) => {
   if (!isAllowed) {
     return <Navigate to={redirectTo} replace />;
+  }
+  if (allowedRoles && allowedRoles.length > 0 && (!userRole || !allowedRoles.includes(userRole))) {
+    return <Navigate to="/" replace />;
   }
   return <Outlet />;
 };

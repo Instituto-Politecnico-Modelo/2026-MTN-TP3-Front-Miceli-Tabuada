@@ -37,3 +37,13 @@
 .login__register a:hover {
   text-decoration: underline;
 }
+
+.form__api-error {
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  background-color: rgba(239, 68, 68, 0.08);
+  border-left: 3px solid var(--color-danger);
+  border-radius: 4px;
+}
