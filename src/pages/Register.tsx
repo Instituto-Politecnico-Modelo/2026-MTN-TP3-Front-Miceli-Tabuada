@@ -6,23 +6,14 @@ import Button from '../components/ui/Button';
 import { authService } from '../services/auth';
 import './Register.css';
 
-// Pantalla de registro. Reune todos los datos que el backend necesita para crear un usuario nuevo.
 const Register = () => {
   const navigate = useNavigate();
 
-  // Lo que el usuario va completando en cada campo del formulario.
   const [form, setForm] = useState({ dni: '', nombre: '', apellido: '', email: '', password: '', confirm: '' });
-
-  // Mensajes de error que aparecen debajo de cada campo cuando algo falta o esta mal.
   const [errors, setErrors] = useState<Partial<Record<keyof typeof form, string>>>({});
-
-  // Si el servidor devuelve un error (por ejemplo, el email ya existe), lo mostramos aca.
   const [apiError, setApiError] = useState('');
-
-  // Mientras esperamos respuesta del servidor, bloqueamos el boton para evitar envios duplicados.
   const [loading, setLoading] = useState(false);
 
-  // Revisa que todos los campos esten completos y que las contrasenas coincidan antes de mandar nada al servidor.
   const validate = () => {
     const newErrors: Partial<Record<keyof typeof form, string>> = {};
     if (!form.dni) newErrors.dni = 'El DNI es requerido';
@@ -35,9 +26,6 @@ const Register = () => {
     return newErrors;
   };
 
-  // Cuando el usuario apreta Registrarse: primero valida los campos, despues llama al servidor.
-  // Si el registro sale bien, manda al usuario a la pantalla de login para que inicie sesion.
-  // Si el servidor devuelve un error (email o DNI ya registrado), se lo mostramos.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors = validate();
@@ -121,9 +109,7 @@ const Register = () => {
             error={errors.confirm}
             onChange={(e) => setForm({ ...form, confirm: e.target.value })}
           />
-          {/* Muestra el error que mando el servidor solo cuando hay uno, por ejemplo email ya registrado. */}
           {apiError && <p className="form__api-error">{apiError}</p>}
-          {/* El boton se deshabilita mientras esperamos respuesta para que el usuario no lo aprete dos veces. */}
           <Button type="submit" size="lg" className="register__submit" disabled={loading}>
             {loading ? 'Registrando...' : 'Registrarse'}
           </Button>

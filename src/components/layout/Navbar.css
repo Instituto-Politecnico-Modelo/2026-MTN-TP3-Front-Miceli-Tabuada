@@ -49,6 +49,23 @@
   border-bottom-color: var(--color-primary);
 }
 
+.navbar__logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-nav-text-soft);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  padding-block: var(--space-1);
+  border-bottom: 2px solid transparent;
+  transition: color var(--transition-fast);
+}
+
+.navbar__logout:hover {
+  color: var(--color-text-inverse);
+  border-bottom-color: var(--color-danger);
+}
+
 @media (max-width: 480px) {
   .navbar {
     padding: var(--space-3) var(--space-4);

@@ -7,25 +7,15 @@ import { authService } from '../services/auth';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
-// Pantalla de inicio de sesion. El usuario ingresa su email y contrasena para entrar a la app.
 const Login = () => {
   const navigate = useNavigate();
-  // Necesitamos la funcion login del contexto para actualizar la sesion en toda la app despues de autenticar.
   const { login } = useAuth();
 
-  // Lo que el usuario va escribiendo en los campos del formulario.
   const [form, setForm] = useState({ email: '', password: '' });
-
-  // Mensajes que aparecen debajo de cada campo cuando algo esta vacio o mal.
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-
-  // Si el servidor rechaza el login, guardamos el mensaje aca para mostrarselo al usuario.
   const [apiError, setApiError] = useState('');
-
-  // Mientras esperamos respuesta del servidor, bloqueamos el boton para evitar envios dobles.
   const [loading, setLoading] = useState(false);
 
-  // Chequeos basicos antes de llamar al servidor. Si los campos estan vacios no tiene sentido mandar nada.
   const validate = () => {
     const newErrors: typeof errors = {};
     if (!form.email) newErrors.email = 'El email es requerido';
@@ -33,8 +23,6 @@ const Login = () => {
     return newErrors;
   };
 
-  // Cuando el usuario apreta Ingresar: primero valida los campos, despues llama al servidor,
-  // y si todo sale bien actualiza la sesion global y manda al usuario al inicio.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors = validate();
@@ -46,7 +34,6 @@ const Login = () => {
     setApiError('');
     try {
       const response = await authService.login({ email: form.email, password: form.password });
-      // Le pasamos el token al contexto para que lo guarde y actualice el estado de sesion.
       login(response.token);
       navigate('/');
     } catch (err) {

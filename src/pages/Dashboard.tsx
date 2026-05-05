@@ -9,7 +9,6 @@ const Dashboard = () => {
         <Card title="Bienvenido">
           <p>Estás en el área privada de la aplicación.</p>
         </Card>
-        {/* Agregar más widgets o cards según el TP */}
       </div>
     </div>
   );

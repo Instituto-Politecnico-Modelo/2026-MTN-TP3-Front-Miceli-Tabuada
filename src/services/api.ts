@@ -1,12 +1,14 @@
-// Direccion del servidor al que apuntan todos los pedidos. Se puede cambiar con una variable de entorno sin tocar el codigo.
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
 
-// Todos los pedidos al servidor pasan por aca. Si la respuesta no es exitosa,
-// convierte el mensaje de error del servidor en una excepcion para que los formularios puedan mostrarlo.
+// Todas las peticiones al backend pasan por aca.
+// Si la respuesta no es exitosa, convierte el mensaje del servidor en una excepción.
+// El token JWT se adjunta automáticamente cuando existe en localStorage.
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const token = localStorage.getItem('token');
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
     ...options,
@@ -20,7 +22,6 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-// Los cuatro tipos de pedido que usamos en la app, listos para llamar desde cualquier servicio.
 export const api = {
   get: <T>(endpoint: string) => request<T>(endpoint),
   post: <T>(endpoint: string, body: unknown) =>

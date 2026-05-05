@@ -1,0 +1,149 @@
+import { useState, useEffect } from 'react';
+import Card from '../components/ui/Card';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import { userService } from '../services/user';
+import { useAuth } from '../context/AuthContext';
+import './Profile.css';
+
+const Profile = () => {
+  const { user, updateUser } = useAuth();
+
+  const [form, setForm] = useState({
+    nombre: '',
+    apellido: '',
+    telefono: '',
+    password: '',
+    confirm: '',
+  });
+
+  const [errors, setErrors] = useState<Partial<Record<keyof typeof form, string>>>({});
+  const [apiError, setApiError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // Precarga los datos actuales del usuario en el formulario al montar la pantalla.
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        nombre: user.nombre ?? '',
+        apellido: user.apellido ?? '',
+        telefono: user.telefono ?? '',
+      }));
+    }
+  }, [user]);
+
+  const validate = () => {
+    const newErrors: Partial<Record<keyof typeof form, string>> = {};
+    if (!form.nombre) newErrors.nombre = 'El nombre es requerido';
+    if (!form.apellido) newErrors.apellido = 'El apellido es requerido';
+    if (form.password && form.password !== form.confirm) {
+      newErrors.confirm = 'Las contraseñas no coinciden';
+    }
+    return newErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    if (!user?.id) return;
+
+    setLoading(true);
+    setApiError('');
+    setSuccessMsg('');
+    try {
+      const payload: { nombre: string; apellido: string; telefono?: string; password?: string } = {
+        nombre: form.nombre,
+        apellido: form.apellido,
+        telefono: form.telefono || undefined,
+      };
+      if (form.password) payload.password = form.password;
+
+      const updated = await userService.updateProfile(user.id, payload);
+
+      // Sincroniza el estado global de AuthContext con los nuevos datos guardados.
+      updateUser({
+        nombre: updated.nombre,
+        apellido: updated.apellido,
+        telefono: updated.telefono,
+      });
+
+      setForm((prev) => ({ ...prev, password: '', confirm: '' }));
+      setErrors({});
+      setSuccessMsg('Perfil actualizado correctamente');
+    } catch (err) {
+      setApiError(err instanceof Error ? err.message : 'Error al actualizar el perfil');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="profile">
+      <Card title="Mi Perfil" className="profile__card">
+        <div className="profile__info">
+          <p><span>Email:</span> {user?.email}</p>
+          <p><span>DNI:</span> {user?.dni}</p>
+          {user?.rol && <p><span>Rol:</span> {user.rol}</p>}
+        </div>
+
+        <form onSubmit={handleSubmit} className="profile__form" noValidate>
+          <Input
+            id="nombre"
+            label="Nombre"
+            type="text"
+            value={form.nombre}
+            error={errors.nombre}
+            onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+          />
+          <Input
+            id="apellido"
+            label="Apellido"
+            type="text"
+            value={form.apellido}
+            error={errors.apellido}
+            onChange={(e) => setForm({ ...form, apellido: e.target.value })}
+          />
+          <Input
+            id="telefono"
+            label="Teléfono (opcional)"
+            type="text"
+            placeholder="11 1234-5678"
+            value={form.telefono}
+            onChange={(e) => setForm({ ...form, telefono: e.target.value })}
+          />
+          <Input
+            id="password"
+            label="Nueva contraseña (opcional)"
+            type="password"
+            placeholder="Dejar vacío para no cambiarla"
+            value={form.password}
+            error={errors.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
+          <Input
+            id="confirm"
+            label="Confirmar contraseña"
+            type="password"
+            placeholder="••••••••"
+            value={form.confirm}
+            error={errors.confirm}
+            onChange={(e) => setForm({ ...form, confirm: e.target.value })}
+          />
+          {apiError && <p className="form__api-error">{apiError}</p>}
+          {successMsg && <p className="form__success">{successMsg}</p>}
+          <Button type="submit" size="lg" disabled={loading}>
+            {loading ? 'Guardando...' : 'Guardar cambios'}
+          </Button>
+        </form>
+      </Card>
+    </div>
+  );
+};
+
+export default Profile;
