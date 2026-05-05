@@ -5,11 +5,94 @@
   padding: var(--space-4) var(--space-8);
   background-color: var(--color-nav-bg);
   color: var(--color-nav-text);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
   position: sticky;
   top: 0;
   z-index: 100;
 }
+
+.navbar__brand a {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-inverse);
+  text-decoration: none;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.navbar__brand a::before {
+  content: '⚽';
+  font-size: 1.2rem;
+}
+
+.navbar__brand a:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.navbar__links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__links a {
+  color: var(--color-nav-text-soft);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.navbar__links a:hover,
+.navbar__links a.active {
+  color: var(--color-text-inverse);
+  background-color: rgba(255,255,255,0.1);
+  text-decoration: none;
+}
+
+.navbar__links a.active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.navbar__logout {
+  color: var(--color-nav-text-soft);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  background: none;
+  border: none;
+}
+
+.navbar__logout:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: var(--space-3) var(--space-4);
+  }
+  .navbar__links {
+    gap: var(--space-1);
+  }
+  .navbar__links a {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+  }
+}
+
 
 .navbar__brand a {
   font-size: var(--text-xl);

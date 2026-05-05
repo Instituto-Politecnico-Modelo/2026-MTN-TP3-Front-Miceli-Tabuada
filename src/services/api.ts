@@ -1,4 +1,6 @@
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+// Con CORS configurado en el backend, apuntamos directamente al puerto 8081.
+// El proxy de Vite sigue activo como respaldo, pero ya no es necesario.
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8081';
 
 // Todas las peticiones al backend pasan por aca.
 // Si la respuesta no es exitosa, convierte el mensaje del servidor en una excepción.

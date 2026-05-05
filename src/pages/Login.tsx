@@ -4,12 +4,13 @@ import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { authService } from '../services/auth';
+import { userService } from '../services/user';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, updateUser } = useAuth();
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -34,7 +35,11 @@ const Login = () => {
     setApiError('');
     try {
       const response = await authService.login({ email: form.email, password: form.password });
+      // Guarda el token y decodifica los datos básicos del JWT
       login(response.token);
+      // Busca el usuario completo (con ID) por email para poder editar el perfil
+      const usuarioCompleto = await userService.findByEmail(form.email);
+      if (usuarioCompleto) updateUser(usuarioCompleto);
       navigate('/');
     } catch (err) {
       setApiError(err instanceof Error ? err.message : 'Credenciales inválidas');

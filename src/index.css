@@ -2,10 +2,10 @@
    VARIABLES DE DISEÑO (Design Tokens)
 ───────────────────────────────────────── */
 :root {
-  /* Colores primarios */
-  --color-primary:        #646cff;
-  --color-primary-hover:  #535bf2;
-  --color-primary-light:  rgba(100, 108, 255, 0.12);
+  /* Colores primarios — verde esmeralda */
+  --color-primary:        #10b981;
+  --color-primary-hover:  #059669;
+  --color-primary-light:  rgba(16, 185, 129, 0.12);
 
   /* Colores semánticos */
   --color-success:        #22c55e;
@@ -15,20 +15,20 @@
   --color-info:           #3b82f6;
 
   /* Neutros — modo claro */
-  --color-bg:             #f8f9fb;
+  --color-bg:             #f0fdf4;
   --color-surface:        #ffffff;
-  --color-border:         #e2e8f0;
+  --color-border:         #d1fae5;
   --color-border-focus:   var(--color-primary);
 
-  --color-text:           #374151;
+  --color-text:           #1f2937;
   --color-text-soft:      #6b7280;
-  --color-text-heading:   #111827;
+  --color-text-heading:   #064e3b;
   --color-text-inverse:   #ffffff;
 
   /* Navbar / Footer */
-  --color-nav-bg:         #1a1a2e;
-  --color-nav-text:       #e2e8f0;
-  --color-nav-text-soft:  #94a3b8;
+  --color-nav-bg:         #064e3b;
+  --color-nav-text:       #d1fae5;
+  --color-nav-text-soft:  #6ee7b7;
 
   /* Tipografía */
   --font-sans:   system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
@@ -88,13 +88,13 @@
 /* ── Modo oscuro ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg:             #0f1117;
-    --color-surface:        #1a1d27;
-    --color-border:         #2d3348;
-    --color-text:           #d1d5db;
-    --color-text-soft:      #9ca3af;
-    --color-text-heading:   #f9fafb;
-    --color-primary-light:  rgba(100, 108, 255, 0.2);
+    --color-bg:             #022c22;
+    --color-surface:        #064e3b;
+    --color-border:         #065f46;
+    --color-text:           #d1fae5;
+    --color-text-soft:      #6ee7b7;
+    --color-text-heading:   #ecfdf5;
+    --color-primary-light:  rgba(16, 185, 129, 0.2);
   }
 }
 
@@ -325,8 +325,8 @@ img, video {
 
 /* Selección de texto */
 ::selection {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  background-color: rgba(16, 185, 129, 0.25);
+  color: #064e3b;
 }
 
 /* ─────────────────────────────────────────

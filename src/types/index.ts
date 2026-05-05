@@ -22,6 +22,8 @@ export interface Usuario {
   rol?: string;
 }
 
+export type Rol = 'CLIENTE' | 'ADMINISTRADOR';
+
 export interface RegisterRequest {
   dni: number;
   nombre: string;
@@ -29,6 +31,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   telefono?: string;
+  rol: Rol;
 }
 
 export interface LoginRequest {

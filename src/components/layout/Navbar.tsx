@@ -15,7 +15,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar__brand">
-        <Link to="/">MiApp</Link>
+        <Link to="/">Fútbol 5 Ya</Link>
       </div>
       <ul className="navbar__links">
         <li><NavLink to="/">Inicio</NavLink></li>

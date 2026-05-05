@@ -42,6 +42,7 @@ const Register = () => {
         apellido: form.apellido,
         email: form.email,
         password: form.password,
+        rol: 'CLIENTE',  // los usuarios que se registran desde el front son siempre CLIENTE
       });
       navigate('/login');
     } catch (err) {
