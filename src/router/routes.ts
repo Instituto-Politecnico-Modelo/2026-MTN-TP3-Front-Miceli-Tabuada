@@ -1,3 +1,4 @@
+//aca definimos todas las rutas y les ponemos un apodo para usar en codigo.
 export const PUBLIC_ROUTES = {
   HOME: '/',
   LOGIN: '/login',
