@@ -15,12 +15,14 @@ const AppRouter = () => {
   const { isAuthenticated } = useAuth();
 
   return (
+    //definicionde las rutas
     <Routes>
       <Route path={PUBLIC_ROUTES.HOME} element={<Home />} />
       <Route path={PUBLIC_ROUTES.LOGIN} element={<Login />} />
       <Route path={PUBLIC_ROUTES.REGISTER} element={<Register />} />
       <Route path={PUBLIC_ROUTES.ABOUT} element={<About />} />
 
+      // Rutas protegidas, solo accesibles si isAuthenticated es true. (esta en protected route)
       <Route element={<ProtectedRoute isAllowed={isAuthenticated} />}>
         <Route path={PRIVATE_ROUTES.DASHBOARD} element={<Dashboard />} />
         <Route path={PRIVATE_ROUTES.PROFILE} element={<Profile />} />
