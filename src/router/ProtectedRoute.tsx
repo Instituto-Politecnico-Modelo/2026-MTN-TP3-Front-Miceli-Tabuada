@@ -7,8 +7,7 @@ interface ProtectedRouteProps {
   userRole?: string;
 }
 
-// Bloquea el acceso a rutas privadas. Si el usuario no está autenticado lo redirige al login.
-// Opcionalmente verifica que el usuario tenga uno de los roles requeridos.
+//protected route es un componente que se fija que el usuario este autenticado para dejarle ver rutas privadas.
 const ProtectedRoute = ({ isAllowed, redirectTo = '/login', allowedRoles, userRole }: ProtectedRouteProps) => {
   if (!isAllowed) {
     return <Navigate to={redirectTo} replace />;
