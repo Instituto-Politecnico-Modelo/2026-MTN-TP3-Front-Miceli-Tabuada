@@ -1,46 +1,81 @@
-# 2026-MTN-TP3-Front-Miceli-Tabuada
+# 🖥️ TP3 — Frontend
 
-Aplicación frontend desarrollada con React, TypeScript y Vite para el Trabajo Práctico 3.
+![Status](https://img.shields.io/badge/status-en%20proceso-yellow?style=for-the-badge)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-## 📋 Descripción
+---
 
-Aplicación web moderna con sistema de autenticación, gestión de usuarios y panel de control. Incluye rutas protegidas, context API para manejo de estado y persistencia de datos con localStorage.
+## 📌 Descripción
 
-## 🚀 Características
+Este repositorio contiene la parte **frontend** del TP3.  
+La aplicación está construida con **React + TypeScript + Vite** y se conectará con un backend desarrollado en **Spring Boot**.
 
-- ✅ Autenticación de usuarios (Login/Register)
-- ✅ Rutas protegidas y control de acceso
-- ✅ Panel de control (Dashboard)
-- ✅ Perfil de usuario
-- ✅ Sistema de contexto con React Context API
-- ✅ Persistencia de datos en localStorage
-- ✅ Interfaz responsive con CSS modular
-- ✅ TypeScript para type-safety
-- ✅ Vite para desarrollo rápido
+> ⚠️ **Proyecto en proceso** — algunas funcionalidades pueden estar incompletas o sujetas a cambios.
 
-## ▶️ Ejecución
+---
 
-### Modo desarrollo:
+## 🔗 Repositorio Backend
+
+El backend de este proyecto se encuentra en:  
+👉 [2026-MTN-TP3-Back-Miceli-Tabuada](https://github.com/Instituto-Politecnico-Modelo/2026-MTN-TP3-Back-Miceli-Tabuada)
+
+---
+
+## 🛠️ Tecnologías
+
+| Tecnología | Uso |
+|---|---|
+| ⚛️ React 19 | UI |
+| 🟦 TypeScript | Tipado estático |
+| ⚡ Vite | Bundler / Dev server |
+| 🐳 Docker | Containerización |
+| 🔀 React Router | Navegación |
+
+---
+
+## 🐳 Docker
+
+El proyecto incluye dos Dockerfiles:
+
+- **`Dockerfile`** — Multi-stage: construye la app y la sirve con nginx.
+- **`Dockerfile.single`** — Single-stage: construye y sirve con `vite preview`.
+
 ```bash
+# Multi-stage
+docker build -t tp3-front .
+
+# Single-stage
+docker build -f Dockerfile.single -t tp3-front-dev .
+```
+
+---
+
+## 🚀 Levantar en desarrollo
+
+```bash
+npm install
 npm run dev
 ```
-La aplicación estará disponible en `http://localhost:5173`
 
-### Build para producción:
-```bash
-npm run build
-```
+La app corre en `http://localhost:5173` y redirige las peticiones `/api` al backend en `http://localhost:8081`.
 
-### Preview de producción:
-```bash
-npm run preview
-```
+---
 
-##  Autenticación
+## 👥 Equipo
 
-El sistema utiliza React Context para manejar el estado de autenticación. Los datos de sesión se persisten en localStorage.
+### 🎓 Alumnos
+| Nombre | Rol |
+|---|---|
+| Francisco Miceli | Alumno |
+| Lorenzo Tabuada | Alumno |
 
-## 👤 Autor
-
-- **Miceli, Francisco & Tabuada, Lorenzo** - Alumnos del Instituto Politécnico Modelo
+### 👨‍🏫 Docentes
+| Nombre |
+|---|
+| Nicolás Pruscino |
+| Martín Barbieri |
+| Magali Cristobo |
 
