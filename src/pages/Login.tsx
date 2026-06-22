@@ -3,14 +3,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
-import { authService } from '../services/auth';
-import { userService } from '../services/user';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, updateUser } = useAuth();
+  const { login, rol } = useAuth();
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -20,7 +18,7 @@ const Login = () => {
   const validate = () => {
     const newErrors: typeof errors = {};
     if (!form.email) newErrors.email = 'El email es requerido';
-    if (!form.password) newErrors.password = 'La contrasena es requerida';
+    if (!form.password) newErrors.password = 'La contraseña es requerida';
     return newErrors;
   };
 
@@ -34,15 +32,10 @@ const Login = () => {
     setLoading(true);
     setApiError('');
     try {
-      const response = await authService.login({ email: form.email, password: form.password });
-      // Guarda el token y decodifica los datos básicos del JWT
-      login(response.token);
-      // Busca el usuario completo (con ID) por email para poder editar el perfil
-      const usuarioCompleto = await userService.findByEmail(form.email);
-      if (usuarioCompleto) updateUser(usuarioCompleto);
-      navigate('/');
-    } catch (err) {
-      setApiError(err instanceof Error ? err.message : 'Credenciales inválidas');
+      await login(form.email, form.password);
+      navigate(rol === 'ADMINISTRADOR' ? '/admin/dashboard' : '/cliente/dashboard', { replace: true });
+    } catch {
+      setApiError('Credenciales inválidas. Verificá tu email y contraseña.');
     } finally {
       setLoading(false);
     }
@@ -70,16 +63,14 @@ const Login = () => {
             error={errors.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
-          {/* Muestra el error que mando el servidor solo cuando hay uno, por ejemplo "Credenciales invalidas". */}
           {apiError && <p className="form__api-error">{apiError}</p>}
-          {/* El boton se deshabilita mientras esperamos respuesta para que el usuario no lo aprete dos veces. */}
           <Button type="submit" size="lg" className="login__submit" disabled={loading}>
             {loading ? 'Ingresando...' : 'Ingresar'}
           </Button>
         </form>
         <p className="login__register">
           ¿No tenés cuenta?{' '}
-          <Link to="/register">Registrate</Link>
+          <Link to="/registro">Registrate</Link>
         </p>
       </Card>
     </div>

@@ -1,0 +1,18 @@
+.grilla { padding: 2rem; max-width: 900px; margin: 0 auto; }
+.grilla__title { font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; }
+.grilla__controls { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.grilla__controls input { padding: 0.4rem; border: 1px solid #ccc; border-radius: 4px; }
+.grilla__controls button { padding: 0.4rem 1rem; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+.grilla__controls button:disabled { opacity: 0.6; }
+.grilla__error { color: #dc2626; }
+.grilla__empty { color: #6b7280; }
+.grilla__tabla { display: flex; flex-direction: column; gap: 0.5rem; }
+.grilla__item { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #e5e7eb; }
+.grilla__item--libre { background: #f0fdf4; border-color: #86efac; }
+.grilla__item--ocupado { background: #fef2f2; border-color: #fca5a5; }
+.grilla__cancha { font-weight: 600; flex: 1; }
+.grilla__horario { color: #374151; }
+.grilla__dia { color: #6b7280; font-size: 0.85rem; }
+.grilla__estado.libre { color: #16a34a; font-weight: 600; }
+.grilla__estado.ocupado { color: #dc2626; font-weight: 600; }
+.grilla__btn-reservar { margin-left: auto; padding: 0.3rem 0.8rem; background: #16a34a; color: #fff; border: none; border-radius: 4px; cursor: pointer; }

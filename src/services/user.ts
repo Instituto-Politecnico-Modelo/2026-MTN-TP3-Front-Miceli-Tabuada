@@ -1,20 +1,17 @@
-import { api } from './api';
-import type { Usuario, UpdateProfileRequest } from '../types';
+import api from './api';
+import type { UsuarioResponse, ReservaResponse } from '../types';
 
 export const userService = {
-  getAll: () =>
-    api.get<Usuario[]>('/api/usuarios'),
+  getMe: () =>
+    api.get<UsuarioResponse>('/usuarios/me'),
 
-  getProfile: (id: number) =>
-    api.get<Usuario>(`/api/usuarios/${id}`),
+  getAll: (page = 0, size = 20) =>
+    api.get<{ content: UsuarioResponse[]; totalElements: number }>(`/admin/usuarios?page=${page}&size=${size}`),
 
-  updateProfile: (id: number, data: UpdateProfileRequest) =>
-    api.put<Usuario>(`/api/usuarios/${id}`, data),
+  getById: (id: number) =>
+    api.get<UsuarioResponse>(`/admin/usuarios/${id}`),
 
-  // Busca el usuario autenticado por email dentro de la lista de usuarios.
-  // Se usa para obtener el ID luego del login, ya que el JWT no lo incluye.
-  findByEmail: async (email: string): Promise<Usuario | undefined> => {
-    const lista = await api.get<Usuario[]>('/api/usuarios');
-    return lista.find((u) => u.email === email);
-  },
+  getReservasByUsuario: (id: number) =>
+    api.get<ReservaResponse[]>(`/admin/usuarios/${id}/reservas`),
 };
+

@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
-import { userService } from '../services/user';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 const Profile = () => {
-  const { user, updateUser } = useAuth();
+  const { usuario } = useAuth();
 
   const [form, setForm] = useState({
     nombre: '',
@@ -22,17 +22,16 @@ const Profile = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Precarga los datos actuales del usuario en el formulario al montar la pantalla.
   useEffect(() => {
-    if (user) {
+    if (usuario) {
       setForm((prev) => ({
         ...prev,
-        nombre: user.nombre ?? '',
-        apellido: user.apellido ?? '',
-        telefono: user.telefono ?? '',
+        nombre: usuario.nombre ?? '',
+        apellido: usuario.apellido ?? '',
+        telefono: usuario.telefono ?? '',
       }));
     }
-  }, [user]);
+  }, [usuario]);
 
   const validate = () => {
     const newErrors: Partial<Record<keyof typeof form, string>> = {};
@@ -51,7 +50,7 @@ const Profile = () => {
       setErrors(newErrors);
       return;
     }
-    if (!user?.id) return;
+    if (!usuario?.id) return;
 
     setLoading(true);
     setApiError('');
@@ -64,20 +63,12 @@ const Profile = () => {
       };
       if (form.password) payload.password = form.password;
 
-      const updated = await userService.updateProfile(user.id, payload);
-
-      // Sincroniza el estado global de AuthContext con los nuevos datos guardados.
-      updateUser({
-        nombre: updated.nombre,
-        apellido: updated.apellido,
-        telefono: updated.telefono,
-      });
-
+      await api.put(`/usuarios/${usuario.id}`, payload);
       setForm((prev) => ({ ...prev, password: '', confirm: '' }));
       setErrors({});
       setSuccessMsg('Perfil actualizado correctamente');
-    } catch (err) {
-      setApiError(err instanceof Error ? err.message : 'Error al actualizar el perfil');
+    } catch {
+      setApiError('Error al actualizar el perfil');
     } finally {
       setLoading(false);
     }
@@ -87,9 +78,9 @@ const Profile = () => {
     <div className="profile">
       <Card title="Mi Perfil" className="profile__card">
         <div className="profile__info">
-          <p><span>Email:</span> {user?.email}</p>
-          <p><span>DNI:</span> {user?.dni}</p>
-          {user?.rol && <p><span>Rol:</span> {user.rol}</p>}
+          <p><span>Email:</span> {usuario?.email}</p>
+          <p><span>DNI:</span> {usuario?.dni}</p>
+          {usuario?.rol && <p><span>Rol:</span> {usuario.rol}</p>}
         </div>
 
         <form onSubmit={handleSubmit} className="profile__form" noValidate>
@@ -147,3 +138,4 @@ const Profile = () => {
 };
 
 export default Profile;
+

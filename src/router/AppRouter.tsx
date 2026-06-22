@@ -1,36 +1,58 @@
-import { Routes, Route } from 'react-router-dom';
-import { PUBLIC_ROUTES, PRIVATE_ROUTES } from './routes';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import { useAuth } from '../context/AuthContext';
+import { lazy, Suspense } from 'react';
 
-import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
-import About from '../pages/About';
 import NotFound from '../pages/NotFound';
-import Dashboard from '../pages/Dashboard';
-import Profile from '../pages/Profile';
+
+// Lazy-loaded pages
+const Grilla = lazy(() => import('../pages/Grilla'));
+const ClienteDashboard = lazy(() => import('../pages/cliente/Dashboard'));
+const NuevaReserva = lazy(() => import('../pages/cliente/NuevaReserva'));
+const AdminDashboard = lazy(() => import('../pages/admin/Dashboard'));
+const CanchasABM = lazy(() => import('../pages/admin/CanchasABM'));
+const TurnosABM = lazy(() => import('../pages/admin/TurnosABM'));
+const UsuariosPanel = lazy(() => import('../pages/admin/UsuariosPanel'));
 
 const AppRouter = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, rol } = useAuth();
+
+  const homeRedirect = isAuthenticated
+    ? rol === 'ADMINISTRADOR'
+      ? '/admin/dashboard'
+      : '/cliente/dashboard'
+    : '/login';
 
   return (
-    //definicionde las rutas
-    <Routes>
-      <Route path={PUBLIC_ROUTES.HOME} element={<Home />} />
-      <Route path={PUBLIC_ROUTES.LOGIN} element={<Login />} />
-      <Route path={PUBLIC_ROUTES.REGISTER} element={<Register />} />
-      <Route path={PUBLIC_ROUTES.ABOUT} element={<About />} />
+    <Suspense fallback={<div>Cargando...</div>}>
+      <Routes>
+        {/* Public */}
+        <Route path="/" element={<Navigate to={homeRedirect} replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Register />} />
+        <Route path="/grilla" element={<Grilla />} />
 
-      // Rutas protegidas, solo accesibles si isAuthenticated es true. (esta en protected route)
-      <Route element={<ProtectedRoute isAllowed={isAuthenticated} />}>
-        <Route path={PRIVATE_ROUTES.DASHBOARD} element={<Dashboard />} />
-        <Route path={PRIVATE_ROUTES.PROFILE} element={<Profile />} />
-      </Route>
+        {/* Protected — CLIENTE */}
+        <Route element={<ProtectedRoute requiredRole="CLIENTE" />}>
+          <Route path="/cliente/dashboard" element={<ClienteDashboard />} />
+          <Route path="/cliente/nueva-reserva" element={<NuevaReserva />} />
+        </Route>
 
-      <Route path={PUBLIC_ROUTES.NOT_FOUND} element={<NotFound />} />
-    </Routes>
+        {/* Protected — ADMINISTRADOR */}
+        <Route element={<ProtectedRoute requiredRole="ADMINISTRADOR" />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/canchas" element={<CanchasABM />} />
+          <Route path="/admin/turnos" element={<TurnosABM />} />
+          <Route path="/admin/usuarios" element={<UsuariosPanel />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 
 export default AppRouter;
+

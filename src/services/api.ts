@@ -1,36 +1,33 @@
-//el CORS (cross-origin resource sharing) permite que el frontend haga peticiones al backend DIRECTAMENTE.
-//el proxy de vite es una funcionalidad del servidor de desarrollo que actúa como intermediario entre la aplicación frontendy  un servidor backend
-// El proxy de Vite sigue activo como respaldo, pero ya no es necesario porque esta configurado el CORS
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8081';
+import axios from 'axios';
 
-// Todas las peticiones al backend pasan por aca.
-// El token JWT se adjunta automáticamente cuando existe en localStorage.
-async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const token = localStorage.getItem('token');
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options?.headers,
-    },
-    ...options,
-  });
+const TOKEN_KEY = 'token';
 
-  if (!response.ok) { //Si la respuesta del backend devuelve un error, se lee el mensaje y se lanza una excepción.
-    const error = await response.text();
-    throw new Error(error || `HTTP error ${response.status}`);
+const api = axios.create({
+  baseURL: '/api',
+  headers: { 'Content-Type': 'application/json' },
+});
+
+// Request interceptor — agrega Authorization header si hay token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
+  return config;
+});
 
-  return response.json() as Promise<T>;
-}
+// Response interceptor — redirige a /login en 401
+api.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      localStorage.removeItem(TOKEN_KEY);
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
-// Funciones para cada recurso del backend. Se encargan de construir la URL y el cuerpo de la petición.
-export const api = {
-  get: <T>(endpoint: string) => request<T>(endpoint),
-  post: <T>(endpoint: string, body: unknown) =>
-    request<T>(endpoint, { method: 'POST', body: JSON.stringify(body) }),
-  put: <T>(endpoint: string, body: unknown) =>
-    request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
-  delete: <T>(endpoint: string) =>
-    request<T>(endpoint, { method: 'DELETE' }),
-};
+export default api;
+export { TOKEN_KEY };
+

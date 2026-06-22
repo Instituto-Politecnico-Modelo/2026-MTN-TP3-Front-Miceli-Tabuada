@@ -5,7 +5,7 @@ import Button from '../components/ui/Button';
 import './Home.css';
 
 const Home = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, usuario } = useAuth();
 
   return (
     <div className="home">
@@ -14,7 +14,7 @@ const Home = () => {
         <span className="home__badge">⚽ Fútbol 5 Ya</span>
         <h1 className="home__title">
           {isAuthenticated
-            ? `¡Bienvenido, ${user?.nombre}!`
+            ? `¡Bienvenido, ${usuario?.nombre}!`
             : 'Organizá tu fútbol 5 fácilmente'}
         </h1>
         <p className="home__subtitle">

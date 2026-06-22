@@ -17,12 +17,12 @@ const Register = () => {
   const validate = () => {
     const newErrors: Partial<Record<keyof typeof form, string>> = {};
     if (!form.dni) newErrors.dni = 'El DNI es requerido';
-    else if (isNaN(Number(form.dni))) newErrors.dni = 'El DNI debe ser numerico';
+    else if (!/^\d{7,8}$/.test(form.dni)) newErrors.dni = 'El DNI debe tener 7 u 8 dígitos';
     if (!form.nombre) newErrors.nombre = 'El nombre es requerido';
     if (!form.apellido) newErrors.apellido = 'El apellido es requerido';
     if (!form.email) newErrors.email = 'El email es requerido';
-    if (!form.password) newErrors.password = 'La contrasena es requerida';
-    if (form.password !== form.confirm) newErrors.confirm = 'Las contrasenas no coinciden';
+    if (!form.password) newErrors.password = 'La contraseña es requerida';
+    if (form.password !== form.confirm) newErrors.confirm = 'Las contraseñas no coinciden';
     return newErrors;
   };
 
@@ -36,17 +36,22 @@ const Register = () => {
     setLoading(true);
     setApiError('');
     try {
-      await authService.register({
-        dni: Number(form.dni),
+      await authService.registro({
+        dni: form.dni,
         nombre: form.nombre,
         apellido: form.apellido,
         email: form.email,
         password: form.password,
-        rol: 'CLIENTE',  // los usuarios que se registran desde el front son siempre CLIENTE
       });
       navigate('/login');
-    } catch (err) {
-      setApiError(err instanceof Error ? err.message : 'Error al registrarse');
+    } catch (err: unknown) {
+      if (typeof err === 'object' && err !== null && 'response' in err) {
+        const axErr = err as { response?: { data?: { error?: string } } };
+        const msg = axErr.response?.data?.error ?? 'Error al registrarse';
+        setApiError(msg);
+      } else {
+        setApiError('Error al registrarse. Intentá nuevamente.');
+      }
     } finally {
       setLoading(false);
     }
