@@ -11,7 +11,7 @@ interface StoredAuth {
   email: string;
 }
 
-interface AuthContextValue {
+export interface AuthContextValue {
   usuario: UsuarioResponse | null;
   token: string | null;
   rol: Rol | null;
@@ -21,7 +21,7 @@ interface AuthContextValue {
   hasRole: (r: Rol) => boolean;
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+export const AuthContext = createContext<AuthContextValue | null>(null);
 
 function loadStored(): StoredAuth | null {
   try {
